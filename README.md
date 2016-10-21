@@ -22,11 +22,9 @@ Unlike traditional arrays and objects, Firehash can set multiple values based on
 * Scalar: Get one field.
 * Function: To be determined.
 * Array: Get the values of multiple fields, returned as an object.
-* Object: Get the values of multiple fields, returned as an object.
+* Object: Get the values of multiple fields, returned as an object. Use the values in the object for any keys that don't have values.
 
 ## Adding Data to a Firehash
-
-**import(...)** Import one or more objects into the Firehash.
 
 **push(level1,level2,value)** Treat the key at `level1` like an associative array (creating it if it is null), and set its `level2` member to the given value.
 
@@ -35,8 +33,6 @@ Unlike traditional arrays and objects, Firehash can set multiple values based on
 **extract(fieldSlug,collection,transformFn)** Extract values from a collection by a particular field, applying an optional transformation.
 
 ## Retrieving Data from a Firehash
-
-**export()** _(object)_ Create a plain object containing the data of the Firehash.
 
 **count()** _(integer)_ Number of data elements in the Firehash.
 
