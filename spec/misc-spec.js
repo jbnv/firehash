@@ -24,3 +24,15 @@ describe("title()", function() {
   });
 
 });
+
+describe("fix()", function() {
+
+  var hash = new Firehash(sampleObject,sampleName);
+  hash.fix("hoot","hoots");
+
+  it("sets 'hoots' to a true array", function() {
+    expect(hash.get("hoots")).not.toBeUndefined();
+    expect(hash.get("hoots")["5"]).toEqual(true);
+  });
+
+});
