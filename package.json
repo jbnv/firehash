@@ -1,0 +1,15 @@
+{
+  "name": "firehash",
+  "version": "1.0.0",
+  "description": "JavaScript object with array powers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "associative-array",
+    "array"
+  ],
+  "author": "Jay Bienvenu",
+  "license": "ISC"
+}
