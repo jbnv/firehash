@@ -36,3 +36,30 @@ describe("fix()", function() {
   });
 
 });
+
+describe("extract()", function() {
+
+  var collection = {
+    tic: {blah:"foo",yada:"qwerty"},
+    tac: {blah:"foo",hoot:"asdf"},
+    toe: {blah:"bar",hoot:"zxcv"},
+    tug: {hoot:"12345"}
+  }
+
+  var hash = new Firehash();
+  hash.extract("blah",collection);
+  console.log(hash.get());
+
+  it("pulls out an object with keys 'foo','bar'", function() {
+    expect(hash.keys()).toEqual(['foo','bar']);
+  });
+
+  it("has a 'foo' value", function() {
+    expect(Object.keys(hash.get("foo"))).toEqual(["tic","tac"]);
+  });
+
+  it("has a 'bar' value", function() {
+    expect(Object.keys(hash.get("bar"))).toEqual(["toe"]);
+  });
+
+});
