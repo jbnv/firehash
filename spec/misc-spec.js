@@ -42,13 +42,12 @@ describe("extract()", function() {
   var collection = {
     tic: {blah:"foo",yada:"qwerty"},
     tac: {blah:"foo",hoot:"asdf"},
-    toe: {blah:"bar",hoot:"zxcv"},
+    toe: {blah:"bar",burp:"zxcv"},
     tug: {hoot:"12345"}
   }
 
   var hash = new Firehash();
   hash.extract("blah",collection);
-  console.log(hash.get());
 
   it("pulls out an object with keys 'foo','bar'", function() {
     expect(hash.keys()).toEqual(['foo','bar']);
@@ -61,5 +60,43 @@ describe("extract()", function() {
   it("has a 'bar' value", function() {
     expect(Object.keys(hash.get("bar"))).toEqual(["toe"]);
   });
+
+});
+
+describe("forEach()", function() {
+
+  var collection = {
+    tic: {blah:"foo",yada:"qwerty"},
+    tac: {blah:"foo",hoot:"asdf"},
+    toe: {blah:"bar",burp:"zxcv"},
+    tug: {hoot:"12345"}
+  }
+  var hash = new Firehash(collection);
+
+  hash.forEach(function(key,value) {
+    it("returns the value specified in the collection", function() {
+      expect(value).toEqual(collection[key]);
+    });
+  })
+
+});
+
+describe("map()", function() {
+
+  var hash = new Firehash({
+    tic: {blah:"foo",yada:"qwerty"},
+    tac: {blah:"foo",hoot:"asdf"},
+    toe: {blah:"bar",burp:"zxcv"},
+    tug: {hoot:"12345"}
+  });
+  var mapped = hash.map(function(key,value) { return value.hoot || null; });
+
+  it("returns {null,'asdf',null,'12345'}", function() {
+    expect(mapped.tic).toBeNull();
+    expect(mapped.tac).toEqual('asdf');
+    expect(mapped.toe).toBeNull();
+    expect(mapped.tug).toEqual('12345');
+  });
+
 
 });
