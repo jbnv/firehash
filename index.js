@@ -103,8 +103,9 @@ function _map(callback) {
 }
 
 function _reduce(callback,seed) {
-  for (var key in this) callback(key,this[key],seed);
-  return seed;
+  var outbound = seed;
+  for (var key in this) { outbound = callback(key,this[key],outbound) };
+  return outbound;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -169,7 +170,7 @@ Firehash.prototype.keys = function() {
 
 Firehash.prototype.values = function() {
   return _reduce.call(this.__data,function(key,value,seed) {
-    seed.push(value);
+    seed.push(value); return seed;
   },[]);
 }
 
