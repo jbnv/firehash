@@ -11,5 +11,8 @@
     "array"
   ],
   "author": "Jay Bienvenu",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "jasmine": "^2.5.2"
+  }
 }
