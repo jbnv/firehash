@@ -98,5 +98,20 @@ describe("map()", function() {
     expect(mapped.tug).toEqual('12345');
   });
 
+});
+
+describe("reduce()", function() {
+
+  var hash = new Firehash({
+    tic: {blah:"foo",yada:"qwerty"},
+    tac: {blah:"foo",hoot:"asdf"},
+    toe: {blah:"bar",burp:"zxcv"},
+    tug: {hoot:"12345"}
+  });
+  var reduced = hash.reduce(function(key,value,seed) { return seed + (value.hoot || ""); },"");
+
+  it("reduces as expect", function() {
+    expect(reduced).toEqual('asdf12345');
+  });
 
 });
