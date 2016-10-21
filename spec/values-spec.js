@@ -1,21 +1,21 @@
 var Firehash = require("../index");
 
-describe("empty hash", function() {
+describe("values() on empty hash", function() {
 
   var hash = new Firehash();
 
-  it("values() on empty hash returns []]", function() {
+  it("returns []]", function() {
     expect(hash.values()).toEqual([]);
   });
 
 });
 
-describe("hash with one element", function() {
+describe("values() on {key:true}", function() {
 
   var hash = new Firehash();
   hash.set("key");
 
-  it("keys on {key:true} returns [true]", function() {
+  it("returns [true]", function() {
     expect(hash.values()).toEqual([true]);
   });
 
