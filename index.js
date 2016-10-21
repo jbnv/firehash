@@ -1,19 +1,23 @@
 function _set(key,value) {
   if (!key) return;
+  if (!value) value = true;
   if (/boolean|number|string/.test(typeof key)) {
-    this[key] = value || true;
+    this[key] = value;
     return;
   };
   if (typeof key == "function") {
-    key(this,value);
+    key.bind(this)(value);
     return;
   }
   if (Array.isArray(key)) {
-    key.forEach(function(subkey) { this[subkey] =  value || true; })
+    for (var index in key) {
+      var subkey = key[index];
+      this[subkey] = value;
+    }
     return;
   }
   for (var subkey in key) {
-    this[subkey] = value;
+    this[subkey] = key[subkey] || value;
   }
 }
 
@@ -22,23 +26,52 @@ function _set(key,value) {
 // array: get more than one field
 // object: ?
 function _get(key) {
-  if (!key) return;
+  if (!key) return this;
   if (/boolean|number|string/.test(typeof key)) {
     return this[key];
   };
   if (typeof key == "function") {
-  //   key(this,value);
-    return null;
+    return key.bind(this)(value);
   }
   if (Array.isArray(key)) {
-    return key.map(function(subkey) { return this[subkey]; })
-    return;
+    var outbound = {};
+    for (var index in key) {
+      var subkey = key[index];
+      outbound[subkey] = this[subkey];
+    }
+    return outbound;
   }
   var outbound = {};
   for (var subkey in key) {
-    outbound[subkey] = this[subkey];
+    outbound[subkey] = this[subkey] || key[subkey];
   }
   return outbound;
+}
+
+// scalar: get one field
+// function: ?
+// array: get more than one field
+// object: ?
+function _delete(key) {
+  if (!key) return this;
+  if (/boolean|number|string/.test(typeof key)) {
+    delete this[key];
+    return this;
+  };
+  if (typeof key == "function") {
+    return _delete.call(this,key(this));
+  }
+  if (Array.isArray(key)) {
+    for (var index in key) {
+      var subkey = key[index];
+      delete this[subkey];
+    }
+    return this;
+  }
+  for (var subkey in key) {
+    if (key[subkey]) delete this[subkey];
+  }
+  return this;
 }
 
 function _log(data) {
@@ -59,28 +92,22 @@ function _push(level1,level2,entity) {
   })
 }
 
-////////////////////////////////////////////////////////////////////////////////
-
-function _import() {
-  var _data = this.__data;
-  Array.from(arguments).forEach(function(data) {
-    if (/boolean|number|string/.test(typeof data)) {
-      _data[data] = true;
-      return;
-    };
-    if (typeof data == "function") {
-      data(_data,true);
-      return;
-    }
-    if (Array.isArray(data)) {
-      data.forEach(function(datum) { _data[datum] = true; })
-      return;
-    }
-    for (var key in data) {
-      _data[key] = data[key];
-    }
-  });
+function _forEach(callback) {
+  for (var key in this) callback(key,this[key]);
 }
+
+function _map(callback) {
+  var outbound = {};
+  for (var key in this) outbound[key] = callback(key,this[key]);
+  return outbound;
+}
+
+function _reduce(callback,seed) {
+  for (var key in this) callback(key,this[key],seed);
+  return seed;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 function _importMessages() {
   var _messages = this.__messages;
@@ -110,46 +137,26 @@ function Firehash(data,name,debug) {
   this.__messages = {};
   this.__name = name || null;
   this.__debug = debug || false;
-  _import.call(this,data);
+  _set.call(this.__data,data);
 }
 
 // path: Either a key to a value or an array of nested keys.
 Firehash.prototype.get = function(path) {
-  if (!path) return null;
-  if (/boolean|number|string/.test(typeof path)) return this.__data[path];
-  //TODO return path.reduce(function )
-  return null;
+  return _get.call(this.__data,path);
 }
 
 Firehash.prototype.set = function(path,value) {
-  if (!path) return null;
-  if (/boolean|number|string/.test(typeof path)) {
-    this.__data[path] = value;
-    return value;
-  }
-  //TODO return path.reduce(function )
-  return null;
+  _set.call(this.__data,path,value);
+}
+
+Firehash.prototype.delete = function(path) {
+  _delete.call(this.__data,path);
 }
 
 // Set the field to the given value only if it is not already set.
 Firehash.prototype.setDefault = function(path,value) {
   if (!path) return null;
-  if (/boolean|number|string/.test(typeof path)) {
-    if (!this.__data[path]) this.__data[path] = value;
-    return this.__data[path];
-  }
-  //TODO return path.reduce(function )
-  return null;
-}
-
-Firehash.prototype.import = _import;
-
-Firehash.prototype.export = function() {
-  var outbound = {};
-  for (var key in this.__data) {
-    outbound[key] = this.__data[key];
-  }
-  return outbound;
+  if (!_get.call(this.__data,path)) _set.call(this.__data,path,value);
 }
 
 Firehash.prototype.count = function() {
@@ -161,7 +168,9 @@ Firehash.prototype.keys = function() {
 }
 
 Firehash.prototype.values = function() {
-  return Object.values(this.__data);
+  return _reduce.call(this.__data,function(key,value,seed) {
+    seed.push(value);
+  },[]);
 }
 
 Firehash.prototype.push = _push;
@@ -220,12 +229,16 @@ Firehash.prototype.extract = function(fieldSlug,collection,transformFn) {
 
 // callback: function(key,value)
 Firehash.prototype.forEach = function(callback) {
-  for (var key in this.__data) callback(key,this.__data[key]);
+  _forEach.call(this.__data,callback);
 }
 
-//TODO map()
+Firehash.prototype.map = function(callback) {
+  return _map.call(this.__data,callback);
+}
 
-//TODO reduce()
+Firehash.prototype.reduce = function(callback,seed) {
+  return _reduce.call(this.__data,callback,seed);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // messages
@@ -239,8 +252,12 @@ Firehash.prototype.addMessage = _importMessages;
 ////////////////////////////////////////////////////////////////////////////////
 // Data fields
 
+Firehash.prototype.name =  function() {
+  return this.__name;
+}
+
 Firehash.prototype.title =  function() {
-  return this.__data.title || "TITLE NOT SET";
+  return this.__data.title || "UNTITLED";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
