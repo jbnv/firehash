@@ -203,24 +203,29 @@ Firehash.prototype.extract = function(fieldSlug,collection,transformFn) {
 
   if (!fieldSlug) return null;
   if (!collection) return null;
-  if (!transformFn) transformFn = function(x) { return x; };
 
   for (var collectionKey in collection) {
+
     var entity = collection[collectionKey];
     var field = entity[fieldSlug];
     if (!field) continue;
+    var entityTransformed = transformFn ? transformFn(entity) : entity;
+
     if (/boolean|string|number/.test(typeof field)) {
-      _push.call(this,field,collectionKey,entity);
+      _push.call(this,field,collectionKey,entityTransformed);
       continue;
     }
+
     if (Array.isArray(field)) {
       field.forEach(function(fieldKey) {
-        _push.call(this,fieldKey,collectionKey,entity);
+        _push.call(this,fieldKey,collectionKey,entityTransformed);
       })
     }
+
     for (var fieldKey in field || {}) {
-      _push.call(this,fieldKey,collectionKey,entity);
+      _push.call(this,fieldKey,collectionKey,entityTransformed);
     }
+
   }
 
 }
