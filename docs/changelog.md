@@ -1,3 +1,7 @@
+**2016-10-31** _v1.2_
+
+* Add `expand()`.
+
 **2016-10-21** _v1.1.1_
 
 * `extract()`; Apply `transformFn`.

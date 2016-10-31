@@ -198,6 +198,15 @@ Firehash.prototype.fix = function(singular,plural) {
 
 }
 
+Firehash.prototype.expand =  function(fieldSlug,source,transformFn) {
+  if (!fieldSlug) return null;
+  if (!source) return null;
+  if (!transformFn) transformFn = function(x) { return x; };
+  for (var key in _get.call(this.__data,fieldSlug)) {
+    _push.call(this,fieldSlug,key,transformFn(source[key]) || true);
+  }
+}
+
 // Browse a collection and extract all data from a certain field.
 Firehash.prototype.extract = function(fieldSlug,collection,transformFn) {
 
