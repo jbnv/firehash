@@ -74,6 +74,34 @@ function _delete(key) {
   return this;
 }
 
+// scalar: get one field
+// function: ?
+// array: get more than one field
+// object: ?
+function _has(key) {
+
+  function __defined(variable) { return typeof variable !== 'undefined'; }
+
+  var outbound = true;
+  if (!key) return true;
+  if (/boolean|number|string/.test(typeof key)) {
+    return __defined(this[key]);
+  };
+  if (typeof key == "function") {
+    return __defined(key.bind(this)(value));
+  }
+  if (Array.isArray(key)) {
+    for (var index in key) {
+      outbound = outbound && __defined(this[key[index]]);
+    }
+    return outbound;
+  }
+  for (var subkey in key) {
+    outbound = outbound && (!key[subkey] || __defined(this[subkey]));
+  }
+  return outbound;
+}
+
 function _log(data) {
   if (this.__debug) this.__messages[new Date().getTime()] = data;
 }
@@ -152,6 +180,10 @@ Firehash.prototype.set = function(path,value) {
 
 Firehash.prototype.delete = function(path) {
   _delete.call(this.__data,path);
+}
+
+Firehash.prototype.has = function(path) {
+  return _has.call(this.__data,path);
 }
 
 // Set the field to the given value only if it is not already set.
