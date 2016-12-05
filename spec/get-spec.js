@@ -1,6 +1,6 @@
 var Firehash = require("../index");
 
-var sampleObject = { foo: 1, bar: 2, blah: 3, yada: 4, hoot: 5, notset: null },
+var sampleObject = { foo: 1, bar: 2, blah: 3, yada: 4, hoot: 5 },
     sampleHash = new Firehash(sampleObject);
 
 describe("get()", function() {
@@ -12,7 +12,7 @@ describe("get()", function() {
     expect(gotten.blah).toEqual(3);
     expect(gotten.yada).toEqual(4);
     expect(gotten.hoot).toEqual(5);
-    expect(gotten.notset).toEqual(true); // sets null values to true
+    expect(gotten.notset).toBeUndefined();
   });
 
 });
@@ -42,13 +42,12 @@ describe("get(array)", function() {
 describe("get(object)", function() {
 
   it("returns subset of values with default values set", function() {
-    var gotten = sampleHash.get({foo:97,notset:98,brandnew:99});
+    var gotten = sampleHash.get({foo:97,brandnew:99});
     expect(gotten.foo).toEqual(1);
     expect(gotten.bar).toBeUndefined();
     expect(gotten.blah).toBeUndefined();
     expect(gotten.yada).toBeUndefined();
     expect(gotten.hoot).toBeUndefined();
-    expect(gotten.notset).toEqual(true);
     expect(gotten.brandnew).toEqual(99);
   });
 

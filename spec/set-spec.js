@@ -1,16 +1,5 @@
 var Firehash = require("../index");
 
-describe("set(scalar,any)", function() {
-
-  var hash = new Firehash();
-  hash.set("key","value");
-
-  it("sets the data point", function() {
-    expect(hash.get("key")).toEqual("value");
-  });
-
-});
-
 describe("set(scalar) without value", function() {
 
   var hash = new Firehash();
@@ -18,6 +7,39 @@ describe("set(scalar) without value", function() {
 
   it("sets value to true", function() {
     expect(hash.get("key")).toEqual(true);
+  });
+
+});
+
+describe("set(scalar,null)", function() {
+
+  var hash = new Firehash();
+  hash.set("key",null);
+
+  it("sets the data point", function() {
+    expect(hash.get("key")).toBeNull();
+  });
+
+});
+
+describe("set(scalar,false)", function() {
+
+  var hash = new Firehash();
+  hash.set("key",false);
+
+  it("sets the data point", function() {
+    expect(hash.get("key")).toEqual(false);
+  });
+
+});
+
+describe("set(scalar,string)", function() {
+
+  var hash = new Firehash();
+  hash.set("key","value");
+
+  it("sets the data point", function() {
+    expect(hash.get("key")).toEqual("value");
   });
 
 });

@@ -1,6 +1,6 @@
 {
   "name": "firehash",
-  "version": "1.3.0",
+  "version": "1.3.2",
   "description": "JavaScript object with array powers.",
   "main": "index.js",
   "scripts": {

@@ -12,7 +12,6 @@ describe("delete()", function() {
     expect(sampleHash.get("blah")).not.toBeUndefined();
     expect(sampleHash.get("yada")).not.toBeUndefined();
     expect(sampleHash.get("hoot")).not.toBeUndefined();
-    expect(sampleHash.get("notset")).not.toBeUndefined();
   });
 
 });
@@ -27,7 +26,6 @@ describe("delete(scalar)", function() {
     expect(sampleHash.get("blah")).not.toBeUndefined();
     expect(sampleHash.get("yada")).not.toBeUndefined();
     expect(sampleHash.get("hoot")).not.toBeUndefined();
-    expect(sampleHash.get("notset")).not.toBeUndefined();
   });
 
 });
@@ -42,7 +40,6 @@ describe("delete(array)", function() {
     expect(sampleHash.get("blah")).not.toBeUndefined();
     expect(sampleHash.get("yada")).not.toBeUndefined();
     expect(sampleHash.get("hoot")).not.toBeUndefined();
-    expect(sampleHash.get("notset")).not.toBeUndefined();
   });
 
 });
@@ -57,7 +54,6 @@ describe("delete(object)", function() {
     expect(sampleHash.get("blah")).not.toBeUndefined();
     expect(sampleHash.get("yada")).not.toBeUndefined();
     expect(sampleHash.get("hoot")).not.toBeUndefined();
-    expect(sampleHash.get("notset")).not.toBeUndefined();
   });
 
 });
