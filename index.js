@@ -1,6 +1,6 @@
 function _set(key,value) {
   if (!key) return;
-  if (!value) value = true;
+  if (value === undefined) value = true;
   if (/boolean|number|string/.test(typeof key)) {
     this[key] = value;
     return;
